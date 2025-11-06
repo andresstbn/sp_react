@@ -9,6 +9,7 @@ export default function Home() {
   const [searchText, setSearchText] = useState("");
   const [category, setCategory] = useState("");
   const [sortBy, setSortBy] = useState("");
+  //XD
 
   useEffect(() => {
     async function fetchProducts() {
