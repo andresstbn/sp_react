@@ -10,6 +10,8 @@ export default function Home() {
   const [category, setCategory] = useState("");
   const [sortBy, setSortBy] = useState("");
 
+  const [filteredProducts, setFilteredProducts] = useState([]); // Nuevo estado
+
   useEffect(() => {
     async function fetchProducts() {
       try {
@@ -23,6 +25,28 @@ export default function Home() {
     }
     fetchProducts();
   }, []);
+
+  useEffect(() => {
+  let resultado = [...products]; //hacer una copia limpia de los productos originales para no dañarlos
+
+  if (searchText.trim()) { //buscar, si hay algo
+    resultado = resultado.filter((p) =>
+      p.title.toLowerCase().includes(searchText.toLowerCase()) //método de buscar por titulo, con el equivalente minuscula para no entrar en conflicto con mayusculas
+    );
+  }
+
+  if (category !== "") { //siempre y cuando tengan una categoría
+    resultado = resultado.filter((p) => p.category === category); //buscar por categoria
+  }
+
+  if (sortBy === "price-asc") { //ordenar
+    resultado.sort((a, b) => a.price - b.price);
+  } else if (sortBy === "price-desc") {
+    resultado.sort((a, b) => b.price - a.price);
+  }
+
+  setFilteredProducts(resultado);
+}, [products, searchText, category, sortBy]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -40,11 +64,14 @@ export default function Home() {
             />
           </div>
 
-          <Filters />
+          <Filters category={category}
+            setCategory={setCategory}
+            sortBy={sortBy}
+            setSortBy={setSortBy}/>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
@@ -52,3 +79,4 @@ export default function Home() {
     </div>
   );
 }
+
