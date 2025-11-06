@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Filters } from "@/components/Filters";
 import { ProductCard } from "@/components/ProductCard";
 
@@ -9,6 +9,7 @@ export default function Home() {
   const [searchText, setSearchText] = useState("");
   const [category, setCategory] = useState("");
   const [sortBy, setSortBy] = useState("");
+  const [productosFiltrados, setProductosFiltrados] = useState([]);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -23,6 +24,29 @@ export default function Home() {
     }
     fetchProducts();
   }, []);
+
+
+  useEffect(() => {
+    let productoFiltrado = products;
+    
+    if (searchText) {
+      productoFiltrado = productoFiltrado.filter(product =>
+        product.title.toLowerCase().includes(searchText.toLowerCase())
+      );
+    }
+    
+    if (category) {
+      productoFiltrado = productoFiltrado.filter(product => product.category === category);
+    }
+    
+    if (sortBy === "price-asc") {
+      productoFiltrado = [...productoFiltrado].sort((a, b) => a.price - b.price);
+    } else {
+      productoFiltrado = [...productoFiltrado].sort((a, b) => b.price - a.price);
+    }
+    
+    setProductosFiltrados(productoFiltrado);
+  }, [products, searchText, category, sortBy]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -40,11 +64,16 @@ export default function Home() {
             />
           </div>
 
-          <Filters />
+          <Filters 
+            category={category}
+            setCategory={setCategory}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+          />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {products.map((product) => (
+          {productosFiltrados.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
