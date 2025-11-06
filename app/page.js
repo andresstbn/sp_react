@@ -10,7 +10,7 @@ export default function Home() {
   const [category, setCategory] = useState("");
   const [sortBy, setSortBy] = useState("");
 
-  const [filteredProducts, setFilteredProducts] = useState([]); // Nuevo estado
+  const [filtrado, setFiltrado] = useState([]); // Nuevo estado
 
   useEffect(() => {
     async function fetchProducts() {
@@ -26,7 +26,7 @@ export default function Home() {
     fetchProducts();
   }, []);
 
-  useEffect(() => {
+  useEffect(() => {  //No pude realizarlo con un método, investigue un poquito en una documentacion sobre useEffect de que podia simular funciones
   let resultado = [...products]; //hacer una copia limpia de los productos originales para no dañarlos
 
   if (searchText.trim()) { //buscar, si hay algo
@@ -35,17 +35,17 @@ export default function Home() {
     );
   }
 
-  if (category !== "") { //siempre y cuando tengan una categoría
-    resultado = resultado.filter((p) => p.category === category); //buscar por categoria
-  }
-
   if (sortBy === "price-asc") { //ordenar
     resultado.sort((a, b) => a.price - b.price);
   } else if (sortBy === "price-desc") {
     resultado.sort((a, b) => b.price - a.price);
   }
 
-  setFilteredProducts(resultado);
+  if (category !== "") { //siempre y cuando tengan una categoría
+    resultado = resultado.filter((p) => p.category === category); //buscar por categoria
+  }
+
+  setFiltrado(resultado);
 }, [products, searchText, category, sortBy]);
 
   return (
@@ -71,7 +71,7 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredProducts.map((product) => (
+          {filtrado.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
