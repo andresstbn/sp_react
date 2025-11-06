@@ -36,7 +36,8 @@ export default function Home() {
   }
 
   if (sortBy === "price-asc") { //ordenar
-    resultado.sort((a, b) => a.price - b.price);
+    resultado.sort((a, b) => a.price - b.price); //método sort, lo había usado en un repo pasado, en este caso es un poco diferente porque
+    //son numeros
   } else if (sortBy === "price-desc") {
     resultado.sort((a, b) => b.price - a.price);
   }
