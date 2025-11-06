@@ -29,7 +29,7 @@ export default function Home() {
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8 space-y-6">
           <h1 className="text-4xl font-bold">Tienda</h1>
-          
+        
           <div className="max-w-md">
             <input
               type="text"
@@ -40,13 +40,34 @@ export default function Home() {
             />
           </div>
 
-          <Filters />
+          <Filters
+            category={category}
+            setCategory={setCategory}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+          />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+          {products
+            .filter((product) => {
+              // aca se hace el filtrado por categoria
+              if (category && product.category !== category) return false;
+
+              // aca que funcione la busqueda
+              if (searchText && !product.title.toLowerCase().includes(searchText.toLowerCase())) return false;
+              
+              return true;
+            })
+            .sort((a, b) => {
+              // aca ordeno por precio 
+              if (sortBy === "price-asc") return a.price - b.price;
+              if (sortBy === "price-desc") return b.price - a.price;
+              return 0;
+            })
+            .map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
         </div>
       </div>
     </div>
