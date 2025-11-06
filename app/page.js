@@ -77,11 +77,7 @@ export default function Home() {
             filteredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))
-          ) : (
-            <p className="col-span-full text-center text-gray-500 py-10">
-              No se encontraron productos que coincidan con tu búsqueda.
-            </p>
-          )}
+          ) : null}
         </div>
       </div>
     </div>
