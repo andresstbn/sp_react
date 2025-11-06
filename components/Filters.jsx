@@ -35,4 +35,3 @@ export function Filters({ category, setCategory, sortBy, setSortBy }) {
     </div>
   );
 }
-
