@@ -5,12 +5,11 @@ import { Filters } from "@/components/Filters";
 import { ProductCard } from "@/components/ProductCard";
 
 export default function Home() {
+  const [filtrado, setFiltrado] = useState([]); //Cree una nueva variable con el fin de manejar los filtros y no dañar lo original
   const [products, setProducts] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [category, setCategory] = useState("");
   const [sortBy, setSortBy] = useState("");
-
-  const [filtrado, setFiltrado] = useState([]); // Nuevo estado
 
   useEffect(() => {
     async function fetchProducts() {
@@ -29,9 +28,10 @@ export default function Home() {
   useEffect(() => {  //No pude realizarlo con un método, investigue un poquito en una documentacion sobre useEffect de que podia simular funciones
   let resultado = [...products]; //hacer una copia limpia de los productos originales para no dañarlos
 
-  if (searchText.trim()) { //buscar, si hay algo
+  if (searchText.trim()) { //buscar, si hay algo en el e.target.value
     resultado = resultado.filter((p) =>
-      p.title.toLowerCase().includes(searchText.toLowerCase()) //método de buscar por titulo, con el equivalente minuscula para no entrar en conflicto con mayusculas
+      p.title.toLowerCase().includes(searchText.toLowerCase()) //método de buscar por titulo, 
+      // con el equivalente minuscula para no entrar en conflicto con mayusculas, investigado en documentacion JavaScript
     );
   }
 
