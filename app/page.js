@@ -24,12 +24,36 @@ export default function Home() {
     fetchProducts();
   }, []);
 
+  // 1. hacer copia
+  let filteredProducts = [...products];
+
+  // 2. filtrar por texto
+  if (searchText) {
+    filteredProducts = filteredProducts.filter((product) =>
+      product.title.toLowerCase().includes(searchText.toLowerCase())
+    );
+  }
+
+  // 3. filtrar categoria
+  if (category) {
+    filteredProducts = filteredProducts.filter(
+      (product) => product.category === category
+    );
+  }
+
+  // 4. ordenar precio
+  if (sortBy === "price-asc") {
+    filteredProducts.sort((a, b) => a.price - b.price);
+  } else if (sortBy === "price-desc") {
+    filteredProducts.sort((a, b) => b.price - a.price);
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8 space-y-6">
           <h1 className="text-4xl font-bold">Tienda</h1>
-          
+
           <div className="max-w-md">
             <input
               type="text"
@@ -40,13 +64,20 @@ export default function Home() {
             />
           </div>
 
-          <Filters />
+          <Filters
+            category={category}
+            setCategory={setCategory}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+          />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))
+          ) : null}
         </div>
       </div>
     </div>
